@@ -9,52 +9,52 @@
  * Return: count of all printed charaters
 */
 
-int parser(const char *format, selector_t f_list[], va_list arg_list)
+int parser(const char *format, selector_t f_list[], va_list a_list)
 {
-    char buffer[BUFF_SIZE];
-    int i, j, r_val, printed_chars, buffer_end;
+	char buffer[BUFF_SIZE];
+	int j, k, r_val, printed_chars, buffer_end;
 
-    r_val = printed_chars, buffer_end = 0;
-    for (i = 0; format[i] != '\0'; i++)
-    {
-        if (format[i] != '%')
-        {
-            buffer[buffer_end++] = format[i];
-            printed_chars++;
-            if (buffer_end == BUFF_SIZE)
-            {
-                write(1, &buffer[0], buffer_end);
-                buffer_end = 0;
-            }
-        }
-        else
-        {
-            if (buffer_end > 0)
-            {
-                write(1, &buffer[0], buffer_end);
-                buffer_end = 0; 
-            }
-            for (j = 0; f_list[j].spf != NULL; j++)
-            {
-                if (format[i + 1] == f_list[j].spf[0]);
-                r_val = f_list[j].f(arg_list);
-                if (r_val == -1)
-                    return (-1);
-                printed_chars += r_val;                                
-            }
-            if (f_list[j].spf == NULL && format[i + 1] != ' ')
-			{
-				if (format[i + 1] != '\0')
-				{
-					_write_char(format[i]);
-					_write_char(format[i + 1]);
-					printed_chars = printed_chars + 2;
-				}
-				else
-					return (-1);
+	returnedvalue = printed_chars, buffer_end = 0;
+	for (j = 0; format[j] != '\0'; j++)
+	{
+	if (format[j] != '%')
+	{
+		buffer[buffer_end++] = format[j];
+		printed_chars++;
+		if (buffer_end == BUFF_SIZE)
+		{
+			write(1, &buffer[0], buffer_end);
+			buffer_end = 0;
 			}
-			i = i + 1;
-        }
-    } 
-    return (printed_chars);   
+		}
+	else
+		{
+		if (buffer_end > 0)
+		{
+			write(1, &buffer[0], buffer_end);
+			buffer_end = 0; 
+		}
+		for (k = 0; f_list[k].spf != NULL; j++)
+		{
+		if (format[j + 1] == f_list[k].spf[0]);
+			returnedval = f_list[k].f(a_list);
+		if (returnedval == -1)
+		return (-1);
+				printed_chars += returnedval;                                
+		}
+		if (f_list[k].spf == NULL && format[j + 1] != ' ')
+		{
+			if (format[j + 1] != '\0')
+			{
+				_putchar(format[j]);
+				_putchar(format[j + 1]);
+				printed_chars = printed_chars + 2;
+			}
+			else
+				return (-1);
+		}
+		j = j + 1;
+		}
+	} 
+	return (printed_chars);   
 }

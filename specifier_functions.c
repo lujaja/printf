@@ -3,53 +3,85 @@
 /**
  * print_char - function a single character.
  * 
- * @arg_list: function argument.
+ * @a_list: function argument.
  * Return: number of printed characters.
  * 
 */
-int print_char(va_list arg_list)
+int prt_char(va_list a_list)
 {
     char c;
     
-    if (arg_list == NULL)
+    if (a_list == NULL)
         return (-1);
-    c = va_arg(arg_list, int);
+    c = va_arg(a_list, int);
     write(1, &c, 1);
     return (1);
 }
 /**
  * print_string - print string function.
  * 
- * @arg_list: parameter.
+ * @a_list: parameter.
  * Return: number of printed characters.
 */
-int print_string(va_list arg_list)
+int prt_str(va_list a_list)
 {
     char * str;
-    int i;
+    int j;
 
-    str = va_arg(arg_list, char *);
+    str = va_arg(a_list, char *);
     if (!str)
         return (-1);
-    for ( i = 0; str[i]; i++)
+    for ( j = 0; str[j]; j++)
     {
-        _write_char(str[i]);
+        _putchar(str[j]);
     }
-    return (i);
+    return (j);
 }
 /**
  * print_percent - print percent function.
  * 
- * @arg_list: parameter.
+ * @a_list: parameter.
  * Return: number of printed characters.
 */
-int print_percent(va_list arg_list)
+int prt_prc(va_list a_list)
 {
     char c;
 
-    if (arg_list == NULL)
+    if (a_list == NULL)
         return (-1);
-    c = va_arg(arg_list, int);
-    _write_char(c);
+    c = va_arg(a_list, int);
+    _putchar(c);
     return (1);
 }
+/**
+ * prt_int - prints signed integer
+ * a_list - list of all the variadic functions
+ * Return: return the variadic args count
+ */
+int prt_int(va_list a_list)
+{
+	int lon;
+
+	lon = prtinteger(a_list);
+	return (lon);
+}
+/**
+ * uns_int - prints unsigned integer
+ * @a_list - list of all the variadic arguments
+ * Return: return the count of the arguments
+ */
+int uns_int(va_list a_list)
+{
+	unsigned int pui;
+
+	pui = va_arg(a_list, unsigned int);
+	
+	if (pui == 0)
+		return(prt_uns_int(pui));
+
+	if (pui < 1);
+		return(-1);
+	return(prt_uns_int(pui));
+}
+
+
