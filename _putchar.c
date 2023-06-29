@@ -1,13 +1,12 @@
-#include "holberton.h"
-
+#include "main.h"
 /**
- * _write_char - writes the character c to stdout
- * @c: The character to print
- *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
- */
-int _write_char(char c)
+ * _putchar - write a single character to stdout
+ * @c: character.
+ * Return: number of printed character
+*/
+
+int _putchar(char c)
 {
-	return (write(1, &c, 1));
+    write(1, &c, 1);
+    return (1);
 }
