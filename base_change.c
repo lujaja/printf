@@ -1,145 +1,188 @@
 #include "main.h"
 
+/****************** PRINT POINTER ******************/
 /**
- * print_binary - function to print convert decimal to binary.
- * 
- * @arg_list: argument
- * Return: number of printed characters
-*/
-
-int prt_bin(va_list a_list)
-{
-    char *str;
-    int i, j, len, num, count;
-    
-    i = 0;
-    len = baselength(num,2);
-    num = va_arg(a_list, int);
-    
-    if (num == 0)
-    {
-        _putchar('0');
-        count++;
-    } 
-    str = (char *) malloc(sizeof(char) * (len + 1));
-    if (str == NULL)
-        return (-1);
-    while (num > 0)
-    {
-        if (num % 2 == 0)
-            str[i] = '0';
-        else
-            str[i] = '1';
-        num /= 2;
-        count++;
-        i++; 
-    }
-    for (j = i -1; j >= 0; j--)
-    {
-        _putchar(str[j]);
-    }
-    free(str);
-    return (count);
-}
-/**
- * print_heX - Prints a representation of a decimal number on base16 Uppercase
- * @list: List of the arguments passed to the function
- * Return: Number of characters printed
+ * print_pointer - Prints the value of a pointer variable
+ * @types: List a of arguments
+ * @buffer: Buffer array to handle print
+ * @flags:  Calculates active flags
+ * @width: get width
+ * @precision: Precision specification
+ * @size: Size specifier
+ * Return: Number of chars printed.
  */
-int prt_hex_dec(va_list a_list)
+int print_pointer(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
 {
-    char *hex_num;
-    char *hex_rep;
-    int i, len, rem_num, count;
-    unsigned int num;
+	char extra_c = 0, padd = ' ';
+	int ind = BUFF_SIZE - 2, length = 2, padd_start = 1; /* length=2, for '0x' */
+	unsigned long num_addrs;
+	char map_to[] = "0123456789abcdef";
+	void *addrs = va_arg(types, void *);
 
-    num = va_arg(a_list, unsigned int );
+	UNUSED(width);
+	UNUSED(size);
 
-    len = baselength(num, 16);
-    count = 0;
-    i = len;
-        
-    hex_num = (char *) malloc(sizeof(char) * (len + 1));
-    if (hex_num == NULL)
-        return (-1);
-    if (num == 0)
-    {
-        _putchar('0');
-        count++;
-    }
-    if (num < 0)
-        return (-1);
-    for (i = 0; num > 0; i++)
-    {
-        rem_num = num % 16;
-        if (rem_num > 9)
-        {
-            rem_num = hex_check(rem_num, 'x');
-            hex_num[i] = rem_num;
-        }
-        else
-        {
-            hex_num[i] = rem_num + '0';
-        }
-        num /= 16;
-    }
-    hex_num[i] = '\0';
-    for (i = len - 1; i >= 0; i--)
-    {
-        write(1, &hex_num[i], 1);
-        count++;
-    }
-    free(hex_num);
-    return (count);
+	if (addrs == NULL)
+		return (write(1, "(nil)", 5));
+
+	buffer[BUFF_SIZE - 1] = '\0';
+	UNUSED(precision);
+
+	num_addrs = (unsigned long)addrs;
+
+	while (num_addrs > 0)
+	{
+		buffer[ind--] = map_to[num_addrs % 16];
+		num_addrs /= 16;
+		length++;
+	}
+
+	if ((flags & F_ZERO) && !(flags & F_MINUS))
+		padd = '0';
+	if (flags & F_PLUS)
+		extra_c = '+', length++;
+	else if (flags & F_SPACE)
+		extra_c = ' ', length++;
+
+	ind++;
+
+	/*return (write(1, &buffer[i], BUFF_SIZE - i - 1));*/
+	return (write_pointer(buffer, ind, length,
+		width, flags, padd, extra_c, padd_start));
 }
+
+/************************* PRINT NON PRINTABLE *************************/
 /**
- * print_heX - Prints a representation of a decimal number on base16 Uppercase
- * @list: List of the arguments passed to the function
- * Return: Number of characters printed
+ * print_non_printable - Prints ascii codes in hexa of non printable chars
+ * @types: Lista of arguments
+ * @buffer: Buffer array to handle print
+ * @flags:  Calculates active flags
+ * @width: get width
+ * @precision: Precision specification
+ * @size: Size specifier
+ * Return: Number of chars printed
  */
-int prt_Hex_dec(va_list a_list)
+int print_non_printable(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
 {
-    char *hex_num;
-    char *hex_rep;
-    int i, len, rem_num, count;
-    unsigned int num;
+	int i = 0, offset = 0;
+	char *str = va_arg(types, char *);
 
-    num = va_arg(a_list, unsigned int );
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
 
-    len = baselength(num, 16);
-    count = 0;
-    i = len;
-        
-    hex_num = (char *) malloc(sizeof(char) * (len + 1));
-    if (hex_num == NULL)
-        return (-1);
-    if (num == 0)
-    {
-        _putchar('0');
-        count++;
-    }
-    if (num < 0)
-        return (-1);
-    for (i = 0; num > 0; i++)
-    {
-        rem_num = num % 16;
-        if (rem_num > 9)
-        {
-            rem_num = hex_check(rem_num, 'X');
-            hex_num[i] = rem_num;
-        }
-        else
-        {
-            hex_num[i] = rem_num + '0';
-        }
-        num /= 16;
-    }
-    hex_num[i] = '\0';
-    for (i = len - 1; i >= 0; i--)
-    {
-        write(1, &hex_num[i], 1);
-        count++;
-    }
-    free(hex_num);
-    return (count);
+	if (str == NULL)
+		return (write(1, "(null)", 6));
+
+	while (str[i] != '\0')
+	{
+		if (is_printable(str[i]))
+			buffer[i + offset] = str[i];
+		else
+			offset += append_hexa_code(str[i], buffer, i + offset);
+
+		i++;
+	}
+
+	buffer[i + offset] = '\0';
+
+	return (write(1, buffer, i + offset));
+}
+
+/************************* PRINT REVERSE *************************/
+/**
+ * print_reverse - Prints reverse string.
+ * @types: Lista of arguments
+ * @buffer: Buffer array to handle print
+ * @flags:  Calculates active flags
+ * @width: get width
+ * @precision: Precision specification
+ * @size: Size specifier
+ * Return: Numbers of chars printed
+ */
+
+int print_reverse(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
+{
+	char *str;
+	int i, count = 0;
+
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(size);
+
+	str = va_arg(types, char *);
+
+	if (str == NULL)
+	{
+		UNUSED(precision);
+
+		str = ")Null(";
+	}
+	for (i = 0; str[i]; i++)
+		;
+
+	for (i = i - 1; i >= 0; i--)
+	{
+		char z = str[i];
+
+		write(1, &z, 1);
+		count++;
+	}
+	return (count);
+}
+/************************* PRINT A STRING IN ROT13 *************************/
+/**
+ * print_rot13string - Print a string in rot13.
+ * @types: Lista of arguments
+ * @buffer: Buffer array to handle print
+ * @flags:  Calculates active flags
+ * @width: get width
+ * @precision: Precision specification
+ * @size: Size specifier
+ * Return: Numbers of chars printed
+ */
+int print_rot13string(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
+{
+	char x;
+	char *str;
+	unsigned int i, j;
+	int count = 0;
+	char in[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	char out[] = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
+
+	str = va_arg(types, char *);
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
+
+	if (str == NULL)
+		str = "(AHYY)";
+	for (i = 0; str[i]; i++)
+	{
+		for (j = 0; in[j]; j++)
+		{
+			if (in[j] == str[i])
+			{
+				x = out[j];
+				write(1, &x, 1);
+				count++;
+				break;
+			}
+		}
+		if (!in[j])
+		{
+			x = str[i];
+			write(1, &x, 1);
+			count++;
+		}
+	}
+	return (count);
 }

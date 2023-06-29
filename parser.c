@@ -1,62 +1,50 @@
 #include "main.h"
 /**
- * parser - Receives the main string and all the necessary parameters to
- * print a formated string.
- * @format: A string containing all the desired characters.
- * @f_list: A list of all the posible functions.
- * @arg_list: A list containing all the argumentents passed to the program.
- * Return: A total count of the characters printed.
+ * handle_print - Prints an argument based on its type
+ * @fmt: Formatted string in which to print the arguments.
+ * @list: List of arguments to be printed.
+ * @ind: ind.
+ * @buffer: Buffer array to handle print.
+ * @flags: Calculates active flags
+ * @width: get width.
+ * @precision: Precision specification
+ * @size: Size specifier
+ *
+ * Return: 1 or 2;
  */
-int parser(const char *format, selector_t f_list[], va_list a_list)
+int handle_print(const char *fmt, int *ind, va_list list, char buffer[],
+	int flags, int width, int precision, int size)
 {
-	char buffer[BUFF_SIZE];
-	int j, k, returnedvalue, no_of_characters, buffer_end;
+	int i, unknow_len = 0, printed_chars = -1;
+	fmt_t fmt_types[] = {
+		{'c', print_char}, {'s', print_string}, {'%', print_percent},
+		{'i', print_int}, {'d', print_int}, {'b', print_binary},
+		{'u', print_unsigned}, {'o', print_octal}, {'x', print_hexadecimal},
+		{'X', print_hexa_upper}, {'p', print_pointer}, {'S', print_non_printable},
+		{'r', print_reverse}, {'R', print_rot13string}, {'\0', NULL}
+	};
+	for (i = 0; fmt_types[i].fmt != '\0'; i++)
+		if (fmt[*ind] == fmt_types[i].fmt)
+			return (fmt_types[i].fn(list, buffer, flags, width, precision, size));
 
-	no_of_characters = 0;
-	buffer_end = 0;
-	for (j = 0; format[j] != '\0'; j++)/* Iterates through the main str*/
+	if (fmt_types[i].fmt == '\0')
 	{
-		if (format[j] == '%') /*Checks for format specifiers*/
+		if (fmt[*ind] == '\0')
+			return (-1);
+		unknow_len += write(1, "%%", 1);
+		if (fmt[*ind - 1] == ' ')
+			unknow_len += write(1, " ", 1);
+		else if (width)
 		{
-			/*Iterates through struct to find the right func*/
-			for (k = 0; f_list[k].spf != NULL; k++)
-			{
-				if (format[j + 1] == f_list[k].spf[0])
-				{
-					returnedvalue = f_list[j].f(a_list);
-					if (returnedvalue == -1)
-						return (-1);
-					no_of_characters += returnedvalue;
-					break;
-				}
-			}
-			if (f_list[k].spf == NULL && format[j + 1] != ' ')
-			{
-				if (format[j + 1] != '\0')
-				{
-					_putchar(format[j]);
-					_putchar(format[j + 1]);
-					no_of_characters += 2;
-				}
-				else
-					return (-1);
-			}
-			j += 1; /*Updating i to skip format symbols*/
+			--(*ind);
+			while (fmt[*ind] != ' ' && fmt[*ind] != '%')
+				--(*ind);
+			if (fmt[*ind] == ' ')
+				--(*ind);
+			return (1);
 		}
-		else
-		{
-			buffer[buffer_end++] = format[j];
-			if (buffer_end == BUFF_SIZE)
-			{
-				write(1, &buffer[0], buffer_end);
-				buffer_end = 0;
-			}
-			no_of_characters++;
-		}
-		{
-			write(1, &buffer[0], buffer_end);
-			buffer_end = 0;
-		}
+		unknow_len += write(1, &fmt[*ind], 1);
+		return (unknow_len);
 	}
-	return (no_of_characters);
+	return (printed_chars);
 }
