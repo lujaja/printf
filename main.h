@@ -17,14 +17,13 @@
 
 /**
  * struct selector - Define a structure for specifier and function associeted pointer.
- * 
  * @spf: specifier for a given literal.
  * @f: pointer to function associeted
 */
 struct selector
 {
-    char * spf;
-    int (*f)(va_list);
+	char *spf;
+	int (*f)(va_list);
 };
 typedef struct selector selector_t;
 
