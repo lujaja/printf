@@ -7,15 +7,13 @@
  * Return: number of printed characters.
  * 
 */
-int print_char(va_list arg_list)
+int prt_char(va_list a_list)
 {
     char c;
     
-    if (arg_list == NULL)
-        return (-1);
-    c = va_arg(arg_list, int);
-    write(1, &c, 1);
-    return (1);
+    c = va_arg(a_list, int);
+    _putchar(c);
+    return (1);    
 }
 /**
  * print_string - print string function.
@@ -23,17 +21,17 @@ int print_char(va_list arg_list)
  * @arg_list: parameter.
  * Return: number of printed characters.
 */
-int print_string(va_list arg_list)
+int print_str(va_list a_list)
 {
     char * str;
     int i;
 
-    str = va_arg(arg_list, char *);
-    if (!str)
+    str = (char *)va_arg(a_list, char *);
+    if (str == NULL)
         return (-1);
     for ( i = 0; str[i]; i++)
     {
-        _write_char(str[i]);
+        _putchar(str[i]);
     }
     return (i);
 }
@@ -43,13 +41,8 @@ int print_string(va_list arg_list)
  * @arg_list: parameter.
  * Return: number of printed characters.
 */
-int print_percent(va_list arg_list)
+int prt_percent(__attribute__((unused))va_list a_list)
 {
-    char c;
-
-    if (arg_list == NULL)
-        return (-1);
-    c = va_arg(arg_list, int);
-    _write_char(c);
+    _putchar('%');
     return (1);
 }
