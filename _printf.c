@@ -1,34 +1,30 @@
 #include "main.h"
 /**
- * _printf - Receives the main string and all the necessary parameters to
- * print a formated string
- * @format: A string containing all the desired characters
- * Return: A total count of the characters printed
- */
+ * _printif - function to mimic printf function bahavior
+ * @format: string containing format specifers and length modifers.
+ * Return: number of characters printed.
+*/
 int _printf(const char *format, ...)
 {
-	int no_of_characters = 0;
-	selector_t f_list[] = {
-		{"c", prt_char},
-		{"s", prt_str},
-		{"%", prt_perc},
-        {"b", prt_bin},
-        {"d", prt_int},
-		{"i", prt_int},
-		{"r", prt_reversed},
-		{"R", rot13},
-		{"u", prt_uns_int},
-		{"o", prt_oct},
-		{"x", prt_hex_dec},
-		{"X", prt_Hex_dec},
-        {NULL, NULL}
-	};
-    va_list a_list;
+    unsigned int printed_chars;
 
-    if (format == NULL)
+    selector_f f_list[] = {
+        {"c", prt_char},
+        {"s", prt_str},
+        {"%", prt_percent},
+        {"b", prt_binary},
+        {"x", prt_hexa},
+        {"X", prt_heXa},
+        {NULL, NULL}
+    };
+    if (format == NULL)/*Check if format string is null*/
         return (-1);
-    /*calling parser function*/
-    no_of_characters += parser(format, f_list, a_list);
-    va_end(a_list);
-    return (no_of_characters);
+    va_list arg_list;
+    va_start(arg_list, format);
+    /*call the parser function to do the rest*/
+    printed_chars = parser(format, f_list, arg_list);
+	va_end(arg_list);
+	return (printed_chars);
+
+
 }

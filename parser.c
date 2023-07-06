@@ -1,62 +1,52 @@
 #include "main.h"
+
 /**
  * parser - Receives the main string and all the necessary parameters to
  * print a formated string.
- * @format: A string containing all the desired characters.
+ * @format: A string containing all the format & length modifier characters.
  * @f_list: A list of all the posible functions.
  * @arg_list: A list containing all the argumentents passed to the program.
  * Return: A total count of the characters printed.
  */
-int parser(const char *format, selector_t f_list[], va_list a_list)
+int parser(const char *format, selector_f f_list[], va_list arg_list)
 {
-	char buffer[BUFF_SIZE];
-	int j, k, returnedvalue, no_of_characters, buffer_end;
+	int i, j, r_val, printed_chars;
 
-	no_of_characters = 0;
-	buffer_end = 0;
-	for (j = 0; format[j] != '\0'; j++)/* Iterates through the main str*/
+	printed_chars = 0;
+	for (i = 0; format[i] != '\0'; i++)/* Iterates through the main str*/
 	{
-		if (format[j] == '%') /*Checks for format specifiers*/
+		if (format[i] == '%') /*Checks for format specifiers*/
 		{
 			/*Iterates through struct to find the right func*/
-			for (k = 0; f_list[k].spf != NULL; k++)
+			for (j = 0; f_list[j].spf != NULL; j++)
 			{
-				if (format[j + 1] == f_list[k].spf[0])
+				if (format[i + 1] == f_list[j].spf[0])/**loop through function list to acquire needed function */
 				{
-					returnedvalue = f_list[j].f(a_list);
-					if (returnedvalue == -1)
+					r_val = f_list[j].f_p(arg_list);/*use the selected function to print according to format specifier*/
+					if (r_val == -1)/*check if the function operation of was succcess*/
 						return (-1);
-					no_of_characters += returnedvalue;
-					break;
+					printed_chars += r_val;/*keep count of printed characters*/
+					break;/*feel free to comment if you dont understand*/
 				}
 			}
-			if (f_list[k].spf == NULL && format[j + 1] != ' ')
+			if (f_list[j].spf == NULL && format[i + 1] != ' ')/*check if the function was not found*/
 			{
-				if (format[j + 1] != '\0')
+				if (format[i + 1] != '\0')/*print the specifier character and continue*/
 				{
-					_putchar(format[j]);
-					_putchar(format[j + 1]);
-					no_of_characters += 2;
+					_putchar(format[i]);
+					_putchar(format[i + 1]);
+					printed_chars = printed_chars + 2;
 				}
 				else
 					return (-1);
 			}
-			j += 1; /*Updating i to skip format symbols*/
+			i = i + 1; /*Updating i to skip format symbols*/
 		}
 		else
 		{
-			buffer[buffer_end++] = format[j];
-			if (buffer_end == BUFF_SIZE)
-			{
-				write(1, &buffer[0], buffer_end);
-				buffer_end = 0;
-			}
-			no_of_characters++;
-		}
-		{
-			write(1, &buffer[0], buffer_end);
-			buffer_end = 0;
+			_putchar(format[i]); /*call the write function*/
+			printed_chars++;
 		}
 	}
-	return (no_of_characters);
+	return (printed_chars);
 }
