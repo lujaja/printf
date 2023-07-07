@@ -1,4 +1,5 @@
 #include "main.h"
+#include <math.h>
 /**
  * prt_char - print character
  * @arg_list: parameter to function
