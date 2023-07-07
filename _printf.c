@@ -17,9 +17,9 @@ int _printf(const char *format, ...)
         {"X", prt_heXa},
         {NULL, NULL}
     };
+    va_list arg_list;
     if (format == NULL)/*Check if format string is null*/
         return (-1);
-    va_list arg_list;
     va_start(arg_list, format);
     /*call the parser function to do the rest*/
     printed_chars = parser(format, f_list, arg_list);

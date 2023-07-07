@@ -28,7 +28,7 @@ int _printf(const char *format, ...);
 int parser(const char *format, selector_f f_list[], va_list arg_list);
 int prt_char(va_list);
 int prt_str(va_list);
-int prt_percent(va_list;);
+int prt_percent(va_list);
 int prt_binary(va_list);
 int prt_hexa(va_list);
 int prt_heXa(va_list);

@@ -6,7 +6,7 @@
 */
 int prt_binary(va_list arg_list)
 {
-    char *str, temp;
+    char *str;
     int i, len, num;
 
     num = va_arg(arg_list, unsigned int);
