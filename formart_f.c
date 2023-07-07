@@ -41,3 +41,19 @@ int prt_percent(__attribute__((unused))va_list arg_list)
     _putchar('%');
     return (1);
 }
+int print_int(va_list arg_list)
+{
+    long int num;
+    int i = 1;
+
+    num = va_arg(arg_list, int);
+    while (num / 10 != 0)
+        i++;
+    if (num < 0)
+    {
+        _putchar('-');
+        num = -num;
+    }
+    print_num(num);
+    return (i);
+}

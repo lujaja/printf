@@ -39,3 +39,11 @@ int hex_check( unsigned int num, char x)
         return (hex[num]);
     return (heX[num]);
 }
+void print_num(long int num)
+{
+    if (num != 0)
+    {
+        print_num(num/10);
+        _putchar((num % 10) + '0');
+    }
+}

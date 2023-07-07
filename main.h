@@ -33,11 +33,13 @@ int prt_binary(va_list);
 int prt_hexa(va_list);
 int prt_heXa(va_list);
 int rot13(va_list);
+int print_int(va_list);
 
 
 /*auxilliary function prototypes*/
 int base_len(unsigned int, int);
 int hex_check( unsigned int, char);
+void print_num(long int);
 
 
 
