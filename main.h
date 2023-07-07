@@ -39,7 +39,7 @@ int print_int(va_list);
 /*auxilliary function prototypes*/
 int base_len(unsigned int, int);
 int hex_check( unsigned int, char);
-void print_num(long int);
+int print_num(long int);
 
 
 
