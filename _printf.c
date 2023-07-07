@@ -16,6 +16,8 @@ int _printf(const char *format, ...)
         {"x", prt_hexa},
         {"X", prt_heXa},
         {"R", rot13},
+        {"i", print_int},
+        {"d", print_int},
         {NULL, NULL}
     };
     va_list arg_list;
