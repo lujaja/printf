@@ -43,5 +43,15 @@ int prt_percent(__attribute__((unused))va_list arg_list)
 }
 int print_int(va_list arg_list)
 {
-    return (print_num(va_arg(arg_list, int)));
+    int num, d, c = 1;
+    num = va_arg(arg_list, int);
+
+    d = num;
+    while (num > 9)
+    {
+        c++;
+        num = num / 10;
+    }
+    print_num(d);
+    return (c);
 }

@@ -39,25 +39,16 @@ int hex_check( unsigned int num, char x)
         return (hex[num]);
     return (heX[num]);
 }
-int print_num(long int num)
+void print_num(long int num)
 {
-    int c = 0;
-
     if (num < 0)
     {
         _putchar('-');
-        c++;
         num = num * -1;
     }
     if (num == 0)
-    {
         _putchar('0');
-        c++;
-    }
     if (num / 10)
         print_num(num / 10);
     _putchar((num % 10) + '0');
-    c++;
-    return(c);
-    
 }
